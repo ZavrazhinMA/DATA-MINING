@@ -9,7 +9,7 @@ from db_model import DataBase, UsersHandShake
 from sqlalchemy import exc
 from sqlite3 import IntegrityError as Ierror
 from research_progress_control import search_control
-from scrapy.exceptions import CloseSpider
+# from scrapy.exceptions import CloseSpider
 
 
 class InstaParsePipeline:
@@ -18,7 +18,7 @@ class InstaParsePipeline:
         self.Session = database.maker
         self.close_spider = 0
 
-    def process_item(self, item, spider):
+    def process_item(self, item):
         if not self.close_spider:
             for user in item["users"]:
                 session = self.Session()
@@ -33,6 +33,6 @@ class InstaParsePipeline:
                         session.rollback()
                     else:
                         self.close_spider = 1
-                        raise CloseSpider
+                        # raise CloseSpider
 
         return item

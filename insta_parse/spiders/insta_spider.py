@@ -70,6 +70,8 @@ class InstaSpider(scrapy.Spider):
         else:
             next_user = self.user_list_2.pop()
         time.sleep(3)
+        if os.path.exists('final_chain.txt'):
+            raise CloseSpider
         return next_side, next_user
 
     def user_parse(self, response, main_user, side):
@@ -101,6 +103,8 @@ class InstaSpider(scrapy.Spider):
 
     def parse_followings(self, response, main_user, flw, user_id, side, edge_followed_by_num, edge_follow_num):
 
+        if os.path.exists('final_chain.txt'):
+            raise CloseSpider
         edge_followed_by_num = edge_followed_by_num
         edge_follow_num = edge_follow_num
         main_user = main_user
@@ -147,8 +151,6 @@ class InstaSpider(scrapy.Spider):
                     self.fl_next_level = 1
                     if self.current_level == self.max_level_parse:
                         print("Достигнута заданная глубина поиска. Парсинг завершен")
-                        raise CloseSpider
-                    if os.path.exists('final_chain.txt'):
                         raise CloseSpider
                 if self.fl_next_level:
                     self.user_list_2 = db_next_user_query(2, self.current_level)
